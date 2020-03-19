@@ -6,6 +6,9 @@ using the [Nix][] package manager together with the Nix libraries
 found in [Nixpkgs][]. Before attempting to use Home Manager please
 read the warning below.
 
+For a more systematic overview of Home Manager and its available
+options, please see the [Home Manager manual][manual].
+
 Words of warning
 ----------------
 
@@ -19,7 +22,7 @@ will write to your dconf store and cannot tell whether a configuration
 that it is about to be overwrite was from a previous Home Manager
 generation or from manual configuration.
 
-Home Manager targets [NixOS][] unstable and NixOS version 19.03 (the
+Home Manager targets [NixOS][] unstable and NixOS version 19.09 (the
 current stable version), it may or may not work on other Linux
 distributions and NixOS versions.
 
@@ -72,11 +75,11 @@ Currently the easiest way to install Home Manager is as follows:
     if you are following Nixpkgs master or an unstable channel and
 
     ```console
-    $ nix-channel --add https://github.com/rycee/home-manager/archive/release-19.03.tar.gz home-manager
+    $ nix-channel --add https://github.com/rycee/home-manager/archive/release-19.09.tar.gz home-manager
     $ nix-channel --update
     ```
 
-    if you follow a Nixpkgs version 19.03 channel.
+    if you follow a Nixpkgs version 19.09 channel.
 
     On NixOS you may need to log out and back in for the channel to
     become available. On non-NixOS you may have to add
@@ -300,6 +303,17 @@ in your system configuration and
 
 in your Home Manager configuration.
 
+Releases
+--------
+
+Home Manager is developed against `nixpkgs-unstable` branch, which
+often causes it to contain tweaks for changes/packages not yet
+released in stable NixOS. To avoid breaking users' configurations,
+Home Manager is released in branches corresponding to NixOS releases
+(e.g. `release-19.09`). These branches get fixes, but usually not new
+modules. If you need a module to be backported, then feel free to open
+an issue.
+
 [Bash]: https://www.gnu.org/software/bash/
 [Nix]: https://nixos.org/nix/
 [NixOS]: https://nixos.org/
@@ -307,6 +321,7 @@ in your Home Manager configuration.
 [nixAllowedUsers]: https://nixos.org/nix/manual/#conf-allowed-users
 [nixosAllowedUsers]: https://nixos.org/nixos/manual/options.html#opt-nix.allowedUsers
 [Z shell]: http://zsh.sourceforge.net/
+[manual]: https://rycee.gitlab.io/home-manager/
 [configuration options]: https://rycee.gitlab.io/home-manager/options.html
 [#home-manager]: https://webchat.freenode.net/?url=irc%3A%2F%2Firc.freenode.net%2Fhome-manager
 [freenode]: https://freenode.net/

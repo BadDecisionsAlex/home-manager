@@ -4,15 +4,42 @@ with lib;
 
 let
 
+  inherit (pkgs.stdenv.hostPlatform) isDarwin;
+
   cfg = config.programs.firefox;
 
+  mozillaConfigPath =
+    if isDarwin
+    then "Library/Application Support/Mozilla"
+    else ".mozilla";
+
+  firefoxConfigPath =
+    if isDarwin
+    then "Library/Application Support/Firefox"
+    else "${mozillaConfigPath}/firefox";
+
+  profilesPath =
+    if isDarwin
+    then "${firefoxConfigPath}/Profiles"
+    else firefoxConfigPath;
+
+  # The extensions path shared by all profiles; will not be supported
+  # by future Firefox versions.
   extensionPath = "extensions/{ec8030f7-c20a-464f-9b0e-13a3a9e97384}";
+
+  extensionsEnvPkg = pkgs.buildEnv {
+    name = "hm-firefox-extensions";
+    paths = cfg.extensions;
+  };
 
   profiles =
     flip mapAttrs' cfg.profiles (_: profile:
       nameValuePair "Profile${toString profile.id}" {
         Name = profile.name;
-        Path = profile.path;
+        Path =
+          if isDarwin
+          then "Profiles/${profile.path}"
+          else profile.path;
         IsRelative = 1;
         Default = if profile.isDefault then 1 else 0;
       }
@@ -117,7 +144,7 @@ in
             userChrome = mkOption {
               type = types.lines;
               default = "";
-              description = "Custom Firefox CSS.";
+              description = "Custom Firefox user chrome CSS.";
               example = ''
                 /* Hide tab bar in FF Quantum */
                 @-moz-document url("chrome://browser/content/browser.xul") {
@@ -130,6 +157,16 @@ in
                     visibility: collapse !important;
                   }
                 }
+              '';
+            };
+
+            userContent = mkOption {
+              type = types.lines;
+              default = "";
+              description = "Custom Firefox user content CSS.";
+              example = ''
+                /* Hide scrollbar in FF Quantum */
+                *{scrollbar-width:none !important}
               '';
             };
 
@@ -242,40 +279,47 @@ in
         bcfg = setAttrByPath [browserName] fcfg;
 
         package =
-          if versionAtLeast config.home.stateVersion "19.09"
-          then cfg.package.override { cfg = fcfg; }
-          else (pkgs.wrapFirefox.override { config = bcfg; }) cfg.package { };
+          if isDarwin then
+            cfg.package
+          else if versionAtLeast config.home.stateVersion "19.09" then
+            cfg.package.override { cfg = fcfg; }
+          else
+            (pkgs.wrapFirefox.override { config = bcfg; }) cfg.package { };
       in
         [ package ];
 
     home.file = mkMerge (
       [{
-        ".mozilla/${extensionPath}" = mkIf (cfg.extensions != []) (
-          let
-            extensionsEnv = pkgs.buildEnv {
-              name = "hm-firefox-extensions";
-              paths = cfg.extensions;
-            };
-          in {
-            source = "${extensionsEnv}/share/mozilla/${extensionPath}";
-            recursive = true;
-          }
-        );
+        "${mozillaConfigPath}/${extensionPath}" = mkIf (cfg.extensions != []) {
+          source = "${extensionsEnvPkg}/share/mozilla/${extensionPath}";
+          recursive = true;
+        };
 
-        ".mozilla/firefox/profiles.ini" = mkIf (cfg.profiles != {}) {
+        "${firefoxConfigPath}/profiles.ini" = mkIf (cfg.profiles != {}) {
           text = profilesIni;
         };
       }]
       ++ flip mapAttrsToList cfg.profiles (_: profile: {
-        ".mozilla/firefox/${profile.path}/chrome/userChrome.css" =
+        "${profilesPath}/${profile.path}/chrome/userChrome.css" =
           mkIf (profile.userChrome != "") {
             text = profile.userChrome;
           };
 
-        ".mozilla/firefox/${profile.path}/user.js" =
+        "${profilesPath}/${profile.path}/chrome/userContent.css" =
+          mkIf (profile.userContent != "") {
+            text = profile.userContent;
+          };
+
+        "${profilesPath}/${profile.path}/user.js" =
           mkIf (profile.settings != {} || profile.extraConfig != "") {
             text = mkUserJs profile.settings profile.extraConfig;
           };
+
+        "${profilesPath}/${profile.path}/extensions" = mkIf (cfg.extensions != []) {
+          source = "${extensionsEnvPkg}/share/mozilla/${extensionPath}";
+          recursive = true;
+          force = true;
+        };
       })
     );
   };

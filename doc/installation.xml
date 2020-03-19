@@ -79,11 +79,11 @@
      if you are following Nixpkgs master or an unstable channel and
     </para>
 <screen>
-<prompt>$</prompt> <userinput>nix-channel --add https://github.com/rycee/home-manager/archive/release-19.03.tar.gz home-manager</userinput>
+<prompt>$</prompt> <userinput>nix-channel --add https://github.com/rycee/home-manager/archive/release-19.09.tar.gz home-manager</userinput>
 <prompt>$</prompt> <userinput>nix-channel --update</userinput>
 </screen>
     <para>
-     if you follow a Nixpkgs version 19.03 channel.
+     if you follow a Nixpkgs version 19.09 channel.
     </para>
     <para>
      On NixOS you may need to log out and back in for the channel to become
@@ -169,12 +169,12 @@ $HOME/.nix-profile/etc/profile.d/hm-session-vars.sh
   </para>
 
 <screen>
-<prompt>#</prompt> <userinput>nix-channel --add https://github.com/rycee/home-manager/archive/release-19.03.tar.gz home-manager</userinput>
+<prompt>#</prompt> <userinput>nix-channel --add https://github.com/rycee/home-manager/archive/release-19.09.tar.gz home-manager</userinput>
 <prompt>#</prompt> <userinput>nix-channel --update</userinput>
 </screen>
 
   <para>
-   if you follow a Nixpkgs version 19.03 channel.
+   if you follow a Nixpkgs version 19.09 channel.
   </para>
 
   <para>
@@ -225,6 +225,23 @@ home-manager.useUserPackages = true;
     become the default value in the future.
    </para>
   </note>
+
+  <note>
+   <para>
+    By default, Home Manager uses a private <literal>pkgs</literal> instance
+    that is configured via the <option>home-manager.users.&lt;name&gt;.nixpkgs</option> options.
+    To instead use the global <literal>pkgs</literal> that is configured via
+    the system level <option>nixpkgs</option> options, set
+   </para>
+<programlisting language="nix">
+home-manager.useGlobalPkgs = true;
+</programlisting>
+  <para>
+   This saves an extra Nixpkgs evaluation, adds consistency, and removes the
+   dependency on <envar>NIX_PATH</envar>, which is otherwise used for
+   importing Nixpkgs.
+   </para>
+  </note>
  </section>
  <section xml:id="sec-install-nix-darwin-module">
   <title>nix-darwin module</title>
@@ -251,12 +268,12 @@ home-manager.useUserPackages = true;
   </para>
 
 <screen>
-<prompt>#</prompt> <userinput>nix-channel --add https://github.com/rycee/home-manager/archive/release-19.03.tar.gz home-manager</userinput>
+<prompt>#</prompt> <userinput>nix-channel --add https://github.com/rycee/home-manager/archive/release-19.09.tar.gz home-manager</userinput>
 <prompt>#</prompt> <userinput>nix-channel --update</userinput>
 </screen>
 
   <para>
-   if you follow a Nixpkgs version 19.03 channel.
+   if you follow a Nixpkgs version 19.09 channel.
   </para>
 
   <para>

@@ -1185,6 +1185,236 @@ in
           Specifying them as strings is deprecated.
         '';
       }
+
+      {
+        time = "2019-09-17T19:33:49+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.sxhkd'.
+        '';
+      }
+
+      {
+        time = "2019-09-26T21:05:24+00:00";
+        message = ''
+          A new module is available: 'programs.starship'.
+        '';
+      }
+
+      {
+        time = "2019-09-26T21:47:13+00:00";
+        message = ''
+          A new module is available: 'programs.rtorrent'.
+        '';
+      }
+
+      {
+        time = "2019-11-04T20:56:29+00:00";
+        message = ''
+          A new module is available: 'programs.pazi'.
+        '';
+      }
+
+      {
+        time = "2019-11-05T21:54:04+00:00";
+        condition = config.programs.zsh.enable;
+        message = ''
+          The 'programs.zsh.history.path' option behavior and the
+          default value has changed for state version 20.03 and above.
+
+          Specifically, '$HOME' will no longer be prepended to the
+          option value, which allows specifying absolute paths (e.g.
+          using the xdg module). Also, the default value is fixed to
+          '$HOME/.zsh_history' and 'dotDir' path is not prepended to
+          it anymore.
+        '';
+      }
+
+      {
+        time = "2019-11-17T18:47:40+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.lorri'.
+        '';
+      }
+
+      {
+        time = "2019-11-24T17:46:57+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.spotifyd'.
+        '';
+      }
+
+      {
+        time = "2019-11-29T21:18:48+00:00";
+        message = ''
+          A new module is available: 'programs.password-store'.
+        '';
+      }
+
+      {
+        time = "2019-11-29T21:18:48+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.password-store-sync'.
+        '';
+      }
+
+      {
+        time = "2019-11-29T22:46:49+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.unison'.
+        '';
+      }
+
+      {
+        time = "2019-12-01T22:10:23+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'xdg.mime'.
+
+          If enabled, which it is by default, this module will create
+          the XDG mime database and desktop file database caches from
+          programs installed via Home Manager.
+        '';
+      }
+
+      {
+        time = "2019-12-08T19:48:26+00:00";
+        message = ''
+          A new module is available: 'programs.readline'.
+        '';
+      }
+
+      {
+        time = "2020-01-11T11:49:51+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.cbatticon'.
+        '';
+      }
+
+      {
+        time = "2020-01-26T12:42:33+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'xsession.windowManager.bspwm'.
+        '';
+      }
+
+      {
+        time = "2020-01-26T12:49:40+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.grobi'.
+        '';
+      }
+
+      {
+        time = "2020-01-26T19:37:57+00:00";
+        message = ''
+          A new module is available: 'programs.neomutt'.
+        '';
+      }
+
+      {
+        time = "2020-02-23T10:19:48+00:00";
+        message = ''
+          A new module is available: 'programs.kitty'.
+        '';
+      }
+
+      {
+        time = "2020-02-26T21:20:55+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'wayland.windowManager.sway'
+        '';
+      }
+
+      {
+        time = "2020-03-04T18:55:03+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'programs.abook'
+        '';
+      }
+
+      {
+        time = "2020-03-07T11:43:26+00:00";
+        condition = config.programs.fish.enable;
+        message = ''
+          The option 'programs.fish.functions' has been reworked in
+          order to support all available flags, such as
+          '--description', '--on-event', and more.
+        '';
+      }
+
+      {
+        time = "2020-03-07T13:11:43+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          The NixOS module has a new option: 'home-manager.useGlobalPkgs'.
+
+          This enables using the system configuration's 'pkgs'
+          argument in Home Manager.
+
+          To learn more, see the installation section of the manual
+
+            https://rycee.gitlab.io/home-manager/#sec-install-nixos-module
+        '';
+      }
+
+      {
+        time = "2020-03-07T14:12:50+00:00";
+        message = ''
+          A new module is available: 'programs.lieer'.
+        '';
+      }
+
+      {
+        time = "2020-03-07T14:12:50+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.lieer'.
+        '';
+      }
+
+      {
+        time = "2020-03-15T16:55:28+00:00";
+        condition = config.programs.firefox.enable;
+        message = ''
+          In anticipation of Firefox dropping support for extension
+          sideloading[1], we now install extensions directly to
+          Firefox profiles managed through Home Manager's
+
+            'programs.firefox.profiles'
+
+          option.
+
+          Unfortunately this will most likely trigger an "Existing
+          file is in the way" error when activating your configuration
+          since Firefox keeps a copy of the add-on in the location
+          Home Manager wants to overwrite. If this is the case, remove
+          the listed '.xpi' files and try again.
+
+          This change also means that extensions installed through
+          Home Manager may disappear from unmanaged profiles in future
+          Firefox releases.
+
+          [1] https://blog.mozilla.org/addons/2019/10/31/firefox-to-discontinue-sideloaded-extensions/
+        '';
+      }
+
+      {
+        time = "2020-03-17T21:56:26+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.keynav'.
+        '';
+      }
     ];
   };
 }

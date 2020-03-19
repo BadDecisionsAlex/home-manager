@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ config, lib, pkgs, ... }:
 
 with lib;
 
@@ -13,16 +13,15 @@ with lib;
           border = "border";
           separator = "separator";
         };
-        rows = {
-        };
+        rows = { };
       };
     };
 
-    home.file.result.text =
-      builtins.toJSON
-      (map (a: a.message)
-      (filter (a: !a.assertion)
-        config.assertions));
+    home.file.result.text = builtins.toJSON
+      (map (a: a.message) (filter (a: !a.assertion) config.assertions));
+
+    nixpkgs.overlays =
+      [ (self: super: { rofi = pkgs.writeScriptBin "dummy-rofi" ""; }) ];
 
     nmt.script = ''
       assertFileContent \

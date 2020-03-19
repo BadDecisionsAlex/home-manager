@@ -2,12 +2,6 @@
 
 with lib;
 
-let
-
-  stringsExtra = import ./strings.nix { inherit lib; };
-
-in
-
 {
   # Constructs a type suitable for a `home.file` like option. The
   # target path may be either absolute or relative, in which case it
@@ -86,6 +80,18 @@ in
             into place.
           '';
         };
+
+        force = mkOption {
+          type = types.bool;
+          default = false;
+          visible = false;
+          description = ''
+            Whether the target path should be unconditionally replaced
+            by the managed file source. Warning, this will silently
+            delete the target regardless of whether it is a file or
+            link.
+          '';
+        };
       };
 
       config = {
@@ -93,7 +99,7 @@ in
         source = mkIf (config.text != null) (
           mkDefault (pkgs.writeTextFile {
             inherit (config) executable text;
-            name = stringsExtra.storeFileName name;
+            name = hm.strings.storeFileName name;
           })
         );
       };
