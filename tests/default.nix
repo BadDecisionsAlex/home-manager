@@ -7,14 +7,22 @@ let
   nmt = pkgs.fetchFromGitLab {
     owner = "rycee";
     repo = "nmt";
-    rev = "4174e11107ba808b3001ede2f9f245481dfdfb2e";
-    sha256 = "0vzdh7211dxmd4c3371l5b2v5i3b8rip2axk8l5xqlwddp3jiy5n";
+    rev = "8e130d655ec396ce165763c95bbf4ac429810ca8";
+    sha256 = "1jbljr06kg1ycdn24hj8xap16axq11rhb6hm4949fz48n57pwwps";
   };
 
   modules = import ../modules/modules.nix {
     inherit lib pkgs;
     check = false;
-  };
+  } ++ [
+    # Fix impurities. Without these some of the user's environment
+    # will leak into the tests through `builtins.getEnv`.
+    {
+      xdg.enable = true;
+      home.username = "hm-user";
+      home.homeDirectory = "/home/hm-user";
+    }
+  ];
 
 in
 
@@ -27,15 +35,22 @@ import nmt {
     ./modules/home-environment
     ./modules/misc/fontconfig
     ./modules/programs/alacritty
+    ./modules/programs/alot
+    ./modules/programs/aria2
     ./modules/programs/bash
     ./modules/programs/browserpass
+    ./modules/programs/dircolors
     ./modules/programs/fish
     ./modules/programs/git
     ./modules/programs/gpg
+    ./modules/programs/i3status
+    ./modules/programs/kakoune
+    ./modules/programs/lf
     ./modules/programs/lieer
     ./modules/programs/mbsync
     ./modules/programs/neomutt
     ./modules/programs/newsboat
+    ./modules/programs/qutebrowser
     ./modules/programs/readline
     ./modules/programs/ssh
     ./modules/programs/starship
@@ -44,11 +59,13 @@ import nmt {
     ./modules/programs/zsh
     ./modules/xresources
   ] ++ lib.optionals pkgs.stdenv.hostPlatform.isLinux [
+    ./meta # Suffices to run on one platform.
     ./modules/misc/debug
     ./modules/misc/pam
     ./modules/misc/xdg
     ./modules/misc/xsession
     ./modules/programs/abook
+    ./modules/programs/autorandr
     ./modules/programs/firefox
     ./modules/programs/getmail
     ./modules/services/lieer
@@ -57,5 +74,6 @@ import nmt {
     ./modules/services/sxhkd
     ./modules/services/window-managers/i3
     ./modules/systemd
+    ./modules/targets
   ]);
 }

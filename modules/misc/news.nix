@@ -1415,6 +1415,118 @@ in
           A new module is available: 'services.keynav'.
         '';
       }
+
+      {
+        time = "2020-03-24T22:17:20+00:00";
+        condition = config.services.compton.enable;
+        message = ''
+          The 'services.compton' module has been deprecated and
+          instead the new module 'services.picom' should be used. This
+          is because Nixpkgs no longer packages compton, and instead
+          packages the (mostly) compatible fork called picom.
+
+          The 'services.compton' and 'services.picom' modules have a
+          few differences:
+
+            - 'services.picom' has a new 'experimentalBackends'
+              option.
+
+            - 'vSync' is now a boolean value on 'services.picom', as
+              opposed to the string in 'services.compton'.
+
+          Migrating to the new picom service is simple - just change
+          all references to 'services.compton' to 'services.picom',
+          and adhere to the above changes.
+
+          The deprecated 'services.compton' will eventually be removed
+          in the future. Please update your configurations to use
+          'services.picom' as soon as possible.
+        '';
+      }
+
+      {
+        time = "2020-04-08T09:33:05+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'targets.genericLinux'.
+
+          When enabled, this module will configure various settings
+          and environment variables to make Home Manager and programs
+          installed through Nix work better on GNU/Linux distributions
+          other than NixOS.
+
+          It should not be enabled if your Home Manager configuration
+          is deployed on a NixOS host.
+        '';
+      }
+
+      {
+        time = "2020-04-08T11:51:15+00:00";
+        message = ''
+          A new module is available: 'programs.qutebrowser'
+        '';
+      }
+
+      {
+        time = "2020-04-09T09:19:38+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.mako'
+        '';
+      }
+
+      {
+        time = "2020-04-23T19:45:26+00:00";
+        message = ''
+          A new module is available: 'programs.lf'
+        '';
+      }
+
+      {
+        time = "2020-04-26T13:46:28+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.pulseeffects'
+        '';
+      }
+
+      {
+        time = "2020-05-03T11:13:07+00:00";
+        message = ''
+          A new module is available: 'programs.i3status'
+        '';
+      }
+
+      {
+        time = "2020-05-03T11:21:42+00:00";
+        message = ''
+          A new module is available: 'programs.aria2'
+        '';
+      }
+
+      {
+        time = "2020-05-04T21:19:43+00:00";
+        condition = config.programs.git.enable;
+        message = ''
+          The Git module now supports the 'delta' syntax highlighter.
+
+          It can be enabled through the option 'programs.git.delta.enable'.
+        '';
+      }
+
+      {
+        time = "2020-05-12T20:09:54+00:00";
+        message = ''
+          A new module is available: 'programs.dircolors'
+        '';
+      }
+
+      {
+        time = "2020-05-26T17:13:58+00:00";
+        message = ''
+          A new module is available: 'programs.zoxide'
+        '';
+      }
     ];
   };
 }

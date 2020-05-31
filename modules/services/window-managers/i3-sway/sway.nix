@@ -115,7 +115,6 @@ let
           "${cfg.config.modifier}+minus" = "scratchpad show";
 
           "${cfg.config.modifier}+Shift+c" = "reload";
-          "${cfg.config.modifier}+Shift+r" = "restart";
           "${cfg.config.modifier}+Shift+e" =
             "exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -b 'Yes, exit sway' 'swaymsg exit'";
 
@@ -131,10 +130,8 @@ let
         '';
         example = literalExample ''
           let
-            modifier = cfg.config.modifier;
-          in
-
-          lib.mkOptionDefault {
+            modifier = config.wayland.windowManager.sway.config.modifier;
+          in lib.mkOptionDefault {
             "''${modifier}+Return" = "exec ${cfg.config.terminal}";
             "''${modifier}+Shift+q" = "kill";
             "''${modifier}+d" = "exec ${cfg.config.menu}";
@@ -379,7 +376,7 @@ in {
     xdg.configFile."sway/config" = {
       source = configFile;
       onChange = ''
-        swaySocket=''${XDG_RUNTIME_DIR:-/run/user/$UID}/sway-ipc.$UID.*.sock
+        swaySocket=''${XDG_RUNTIME_DIR:-/run/user/$UID}/sway-ipc.$UID.$(${pkgs.procps}/bin/pgrep -x sway).sock
         if [ -S $swaySocket ]; then
           echo "Reloading sway"
           $DRY_RUN_CMD ${cfg.package}/bin/swaymsg -s $swaySocket reload

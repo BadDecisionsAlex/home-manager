@@ -125,14 +125,22 @@ in
   options = {
     home.username = mkOption {
       type = types.str;
-      defaultText = "$USER";
+      defaultText = literalExample ''
+        "$USER"   for state version < 20.09,
+        undefined for state version ≥ 20.09
+      '';
+      example = "jane.doe";
       description = "The user's username.";
     };
 
     home.homeDirectory = mkOption {
       type = types.path;
-      defaultText = "$HOME";
-      description = "The user's home directory.";
+      defaultText = literalExample ''
+        "$HOME"   for state version < 20.09,
+        undefined for state version ≥ 20.09
+      '';
+      example = "/home/jane.doe";
+      description = "The user's home directory. Must be an absolute path.";
     };
 
     home.profileDirectory = mkOption {
@@ -198,6 +206,16 @@ in
       '';
     };
 
+    home.sessionVariablesExtra = mkOption {
+      type = types.lines;
+      default = "";
+      internal = true;
+      description = ''
+        Extra configuration to add to the
+        <filename>hm-session-vars.sh</filename> file.
+      '';
+    };
+
     home.packages = mkOption {
       type = types.listOf types.package;
       default = [];
@@ -226,8 +244,8 @@ in
       type = types.bool;
       description = ''
         Whether the activation script should start with an empty
-        <envvar>PATH</envvar> variable. When <literal>false</literal>
-        then the user's <envvar>PATH</envvar> will be used.
+        <envar>PATH</envar> variable. When <literal>false</literal>
+        then the user's <envar>PATH</envar> will be used.
       '';
     };
 
@@ -317,8 +335,12 @@ in
       }
     ];
 
-    home.username = mkDefault (builtins.getEnv "USER");
-    home.homeDirectory = mkDefault (builtins.getEnv "HOME");
+    home.username =
+      mkIf (versionOlder config.home.stateVersion "20.09")
+        (mkDefault (builtins.getEnv "USER"));
+    home.homeDirectory =
+      mkIf (versionOlder config.home.stateVersion "20.09")
+        (mkDefault (builtins.getEnv "HOME"));
 
     home.profileDirectory =
       if config.submoduleSupport.enable
@@ -352,7 +374,7 @@ in
             export __HM_SESS_VARS_SOURCED=1
 
             ${config.lib.shell.exportAll cfg.sessionVariables}
-          '';
+          '' + cfg.sessionVariablesExtra;
         }
       )
     ];
