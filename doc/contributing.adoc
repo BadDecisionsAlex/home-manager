@@ -84,6 +84,26 @@ If at all possible, make sure to add new tests and expand existing tests so that
 All contributed code _must_ pass the test suite.
 
 [[sec-guidelines-module-maintainer]]
+
+==== Add relevant documentation
+:docbook: https://tdg.docbook.org/
+:asciidoc: https://asciidoc.org/
+:docbook-rocks: https://docbook.rocks/
+
+Many code changes require changing the documentation as well. Module options should be documented with DocBook. See {docbook-rocks}[DocBook rocks!] for a quick introduction and {docbook}[DocBook 5: The Definitive Guide] for in-depth information of DocBook. Home Manager is itself documented using a combination of DocBook and {asciidoc}[AsciiDoc]. All text is hosted in Home Manager's Git repository.
+
+The HTML version of the manual containing both the module option descriptions and the documentation of Home Manager can be generated and opened by typing the following in a shell within a clone of the Home Manager Git repository:
+
+[source,console]
+$ nix-build -A docs.html
+$ xdg-open ./result/share/doc/home-manager/index.html
+
+When you have made changes to a module, it is a good idea to check that the man page version of the module options looks good:
+
+[source,console]
+$ nix-build -A docs.manPages
+$ man ./result/share/man/man5/home-configuration.nix.5
+
 ==== Add yourself as a module maintainer
 
 Every new module _must_ include a named maintainer using the `meta.maintainers` attribute. If you are a user of a module that currently lacks a maintainer then please consider adopting it.
@@ -119,6 +139,13 @@ Home Manager includes a number of modules that are only usable on some of the su
 If you add a module that is platform specific then make sure to include a condition in the `loadModule` function call. This will make the module accessible only on systems where the condition evaluates to `true`.
 
 Similarly, if you are adding a news entry then it should be shown only to users that may find it relevant, see <<sec-news>> for a description of conditional news.
+
+[[sec-guidelines-licensing]]
+==== Mind the license
+
+The Home Manager project is covered by the MIT license and we can only accept contributions that fall under this license, or are licensed in a compatible way. When you contribute self written code and documentation it is assumed that you are doing so under the MIT license.
+
+A potential gotcha with respect to licensing are option descriptions. Often it is convenient to copy from the upstream software documentation. When this is done it is important to verify that the license of the upstream documentation allows redistribution under the terms of the MIT license.
 
 [[sec-commit-style]]
 === Commits

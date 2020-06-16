@@ -1527,6 +1527,55 @@ in
           A new module is available: 'programs.zoxide'
         '';
       }
+
+      {
+        time = "2020-06-03T17:46:11+00:00";
+        condition = config.programs.ssh.enable;
+        message = ''
+          The ssh module now supports the 'ServerAliveCountMax' option
+          both globally through
+
+              programs.ssh.serverAliveCountMax
+
+          and per match blocks
+
+              programs.ssh.matchBlocks.<name>.serverAliveCountMax
+        '';
+      }
+
+      {
+        time = "2020-06-11T18:06:37+00:00";
+        condition = hostPlatform.isLinux && config.services.emacs.enable;
+        message = ''
+          The Emacs service now supports systemd socket activation.
+
+          It can be enabled through the option 'services.emacs.socketActivation.enable'.
+        '';
+      }
+
+      {
+        time = "2020-06-12T17:48:01+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.clipmenu'
+        '';
+      }
+
+      {
+        time = "2020-06-12T07:08:09+00:00";
+        condition = config.programs.bash.enable;
+        message = ''
+          A new module is available: 'programs.powerline-go'
+        '';
+      }
+
+      {
+        time = "2020-06-14T13:30:19+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'service.fluidsynth'
+        '';
+      }
     ];
   };
 }

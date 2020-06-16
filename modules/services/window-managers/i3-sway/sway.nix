@@ -139,6 +139,15 @@ let
         '';
       };
 
+      bindkeysToCode = mkOption {
+        type = types.bool;
+        default = false;
+        example = true;
+        description = ''
+          Whether to make use of <option>--to-code</option> in keybindings.
+        '';
+      };
+
       input = mkOption {
         type = types.attrsOf (types.attrsOf types.str);
         default = { };
@@ -259,7 +268,11 @@ let
       client.placeholder ${colorSetStr colors.placeholder}
       client.background ${colors.background}
 
-      ${keybindingsStr keybindings}
+      ${keybindingsStr {
+        inherit keybindings;
+        bindsymArgs =
+          lib.optionalString (cfg.config.bindkeysToCode) "--to-code";
+      }}
       ${keycodebindingsStr keycodebindings}
       ${concatStringsSep "\n" (mapAttrsToList inputStr input)}
       ${concatStringsSep "\n" (mapAttrsToList outputStr output)}
@@ -285,15 +298,21 @@ let
   };
 
 in {
+  meta.maintainers = [ maintainers.alexarice ];
+
   options.wayland.windowManager.sway = {
     enable = mkEnableOption "sway wayland compositor";
 
     package = mkOption {
-      type = types.package;
+      type = with types; nullOr package;
       default = defaultSwayPackage;
       defaultText = literalExample "${pkgs.sway}";
       description = ''
-        Sway package to use. Will override the options 'wrapperFeatures', 'extraSessionCommands', and 'extraOptions'.
+        Sway package to use. Will override the options
+        'wrapperFeatures', 'extraSessionCommands', and 'extraOptions'.
+        Set to <code>null</code> to not add any Sway package to your
+        path. This should be done if you want to use the NixOS Sway
+        module to install Sway.
       '';
     };
 
@@ -372,14 +391,15 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ cfg.package ] ++ optional cfg.xwayland pkgs.xwayland;
+    home.packages = optional (cfg.package != null) cfg.package
+      ++ optional cfg.xwayland pkgs.xwayland;
     xdg.configFile."sway/config" = {
       source = configFile;
       onChange = ''
         swaySocket=''${XDG_RUNTIME_DIR:-/run/user/$UID}/sway-ipc.$UID.$(${pkgs.procps}/bin/pgrep -x sway).sock
         if [ -S $swaySocket ]; then
           echo "Reloading sway"
-          $DRY_RUN_CMD ${cfg.package}/bin/swaymsg -s $swaySocket reload
+          $DRY_RUN_CMD ${pkgs.sway}/bin/swaymsg -s $swaySocket reload
         fi
       '';
     };
