@@ -1576,6 +1576,65 @@ in
           A new module is available: 'service.fluidsynth'
         '';
       }
+
+      {
+        time = "2020-06-17T22:17:52+00:00";
+        condition = config.programs.git.enable;
+        message = ''
+          Since May 1, 2020 string values in Git configurations are
+          automatically escaped. If you have any manually escaped characters,
+          then you may need to restore them to their unescaped form to avoid
+          double escaping.
+
+          In other words, if you now have something along the lines of
+
+              programs.git.aliases.hello = '''"!echo $'Hello\\nWorld'"''';
+
+          you must replace it by the unescaped form
+
+              programs.git.aliases.hello = "!echo $'Hello\nWorld'";
+
+          Apologies for the belated notification!
+        '';
+      }
+
+      {
+        time = "2020-06-23T20:06:39+00:00";
+        message = ''
+          A new module is available: 'programs.ne'
+        '';
+      }
+
+      {
+        time = "2020-07-24T15:03:11+00:00";
+        message = ''
+          A new module is available: 'programs.nushell'.
+        '';
+      }
+
+      {
+        time = "2020-07-25T21:04:59+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.dropbox'.
+        '';
+      }
+
+      {
+        time = "2020-08-13T22:15:27+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'programs.waybar'
+        '';
+      }
+
+      {
+        time = "2020-08-14T22:44:20+00:00";
+        condition = hostPlatform.isLinux;
+        message = ''
+          A new module is available: 'services.kanshi'
+        '';
+      }
     ];
   };
 }
